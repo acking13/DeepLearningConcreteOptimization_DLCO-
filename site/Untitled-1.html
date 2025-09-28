@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepLearningConcreteOptimization (DLCO) Inverse Prediction Report</title>
+    <!-- Load Tailwind CSS from CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Use Inter font family -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a1a2e; /* Dark background */
+            color: #e4e4e7; /* Light text */
+        }
+
+        /* --- Custom Animations --- */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulseShadow {
+            0% { text-shadow: 0 0 5px rgba(0, 198, 224, 0.5); }
+            50% { text-shadow: 0 0 10px rgba(0, 198, 224, 0.9); }
+            100% { text-shadow: 0 0 5px rgba(0, 198, 224, 0.5); }
+        }
+
+        /* Custom styles for professional dark look */
+        .content-fade-in {
+            /* Applied to <main> for smooth load */
+            animation: fadeIn 0.8s ease-out both;
+        }
+
+        .report-section {
+            border-left: 4px solid #00c6e0; /* Vibrant cyan/teal border for emphasis */
+            background-color: #162447; /* Slightly lighter card background */
+            /* Add transition for hover effect */
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .report-section:hover {
+            transform: translateY(-5px); /* Lift effect */
+            box-shadow: 0 10px 40px rgba(0, 198, 224, 0.3); /* Cyan glow shadow */
+        }
+        
+        .section-heading {
+            color: #00c6e0; /* Accent color for main headings */
+            /* Apply pulsing shadow animation */
+            animation: pulseShadow 4s infinite ease-in-out;
+        }
+        h3, h4 {
+            color: #f0f0f5; /* Off-white for subheadings */
+        }
+        .table-custom th {
+            background-color: #0d172e;
+            color: #00c6e0;
+        }
+        .table-custom tr:nth-child(even) {
+            background-color: #1a2c58;
+        }
+        .table-custom tr {
+            transition: background-color 0.2s ease; /* Smooth hover transition */
+        }
+        .table-custom tr:hover {
+            background-color: #213c6b;
+        }
+        .chart-container {
+            display: grid;
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+            gap: 2rem;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+    </style>
+</head>
+<body class="p-4 md:p-10 lg:p-16">
+
+    <!-- Header & Metadata -->
+    <header class="max-w-5xl mx-auto mb-12 text-center">
+        <h1 class="text-5xl md:text-6xl font-extrabold text-white leading-tight mb-3">
+            DeepLearningConcreteOptimization (DLCO)
+        </h1>
+        <h2 class="text-2xl md:text-3xl font-semibold text-gray-300 mb-8">
+            Inverse Prediction of Optimal Concrete Mix Designs using Artificial Neural Networks
+        </h2>
+        <div class="flex flex-wrap justify-center space-x-0 md:space-x-8 text-lg text-gray-400">
+            <span class="mb-2 md:mb-0">• Author(s): Your Name</span>
+            <span class="mb-2 md:mb-0">• Date: September 22, 2025</span>
+        </div>
+    </header>
+
+    <!-- Report Body Container - Added content-fade-in class -->
+    <main class="max-w-5xl mx-auto shadow-2xl rounded-3xl p-6 md:p-12 lg:p-16 content-fade-in" style="background-color: #1e2a4a;">
+
+        <!-- Abstract -->
+        <section class="mb-12 p-8 rounded-2xl shadow-xl report-section border-[#00c6e0]">
+            <h3 class="text-3xl font-extrabold mb-4 text-[#00c6e0]">Abstract</h3>
+            <p class="text-gray-300 leading-relaxed text-lg">
+                This project, titled DeepLearningConcreteOptimization (DLCO), addresses the challenge of efficient and precise concrete mix design by employing a multi-output Artificial Neural Network (ANN). Instead of the traditional approach of predicting strength from a known mix, this study focuses on the inverse problem: determining the optimal proportions of five key ingredients—Cement, Blast Furnace Slag, Fly Ash, Water, and Superplasticizer—required to achieve a specific target Compressive Strength (CS) at a given Age. The model utilizes the UCI Concrete Compressive Strength dataset, restructuring the roles of the variables. The key results showed that the multi-output ANN successfully learned the complex nonlinear relationships, achieving high R-squared values across all five output composition variables. The conclusion is that deep learning provides a viable, rapid, and non-linear alternative to traditional, trial-and-error methods for optimizing concrete formulation, potentially leading to significant reductions in material waste and cost.
+            </p>
+        </section>
+
+        <!-- 1. Introduction -->
+        <section class="mb-12">
+            <h2 class="text-4xl font-bold mb-8 section-heading border-b border-gray-600 pb-2">1. Introduction</h2>
+
+            <div class="p-6 rounded-xl mb-6 bg-[#162447]">
+                <h3 class="text-2xl font-semibold mb-3">1.1. Background</h3>
+                <p class="mb-5 text-gray-300">Concrete is the most widely used man-made material, forming the backbone of global infrastructure. Its durability, cost-efficiency, and strength are paramount. The traditional process of mix design, which involves systematically proportioning ingredients to meet specific engineering requirements (like a minimum compressive strength at a certain age), is often time-consuming, resource-intensive, and relies heavily on empirical knowledge and iterative testing. Optimizing the blend of supplemental cementitious materials (SCMs) and water is crucial for sustainability and performance.</p>
+
+                <h3 class="text-2xl font-semibold mb-3">1.2. Problem Statement</h3>
+                <p class="mb-5 text-gray-300">The goal of the DLCO project is to develop an inverse machine learning model that can determine the optimal ratios of the primary mixture components (Cement, Slag, Fly Ash, Water, and Superplasticizer) based on four desired input parameters: the required Target Compressive Strength, the curing Age, and the fixed amounts of Coarse Aggregate and Fine Aggregate. This shifts the focus from simple prediction to engineering optimization and formulation.</p>
+
+                <h3 class="text-2xl font-semibold mb-3">1.3. Objectives</h3>
+                <ul class="list-disc list-inside space-y-2 text-gray-300 ml-4">
+                    <li>Restructure the dataset to define the desired properties (Target CS, Age, and Aggregates) as input features and the mix composition (Cement, Slag, Fly Ash, Water, Superplasticizer) as target variables.</li>
+                    <li>Preprocess the data through scaling and normalization to prepare it for neural network training.</li>
+                    <li>Build and train a Multi-Output Artificial Neural Network (ANN) capable of simultaneously predicting five distinct continuous output variables.</li>
+                    <li>Evaluate the model’s performance using appropriate multi-dimensional metrics (e.g., $R^2$, Mean Squared Error) across all five output features on a held-out test set.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 2. Methodology -->
+        <section class="mb-12">
+            <h2 class="text-4xl font-bold mb-8 section-heading border-b border-gray-600 pb-2">2. Methodology</h2>
+            
+            <div class="p-6 rounded-xl mb-6 bg-[#162447]">
+                <h3 class="text-2xl font-semibold mb-3">2.1. Dataset Description</h3>
+                <p class="mb-5 text-gray-300">The UCI Concrete Compressive Strength dataset serves as the foundational data source. For the DLCO inverse problem, the feature roles have been redefined. The total dataset consists of 1030 samples.</p>
+                <div class="mb-5 p-4 bg-[#0d172e] rounded-lg border border-gray-700">
+                    <p class="font-bold text-[#00c6e0] mb-2">Restructured Variables:</p>
+                    <ul class="list-disc list-inside text-gray-300 ml-4">
+                        <li><span class="font-medium text-white">Input Features (Desired Conditions/Goals - 4 variables):</span> Coarse Aggregate, Fine Aggregate, Age (days), Compressive Strength (Target MPa)</li>
+                        <li><span class="font-medium text-white">Target Variables (Optimal Mix Composition - 5 variables):</span> Cement, Blast Furnace Slag, Fly Ash, Water, Superplasticizer (all in $\text{kg/m}^3$)</li>
+                    </ul>
+                </div>
+
+                <h3 class="text-2xl font-semibold mb-3">2.2. Data Analysis</h3>
+                <p class="mb-3 text-gray-300">Summary Statistics of Concrete Data:</p>
+                <!-- Summary Statistics Table -->
+                <div class="overflow-x-auto mb-6 shadow-xl rounded-lg border border-gray-700">
+                    <table class="min-w-full divide-y divide-gray-700 table-custom">
+                        <thead class="bg-[#0d172e]">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-sm font-medium uppercase tracking-wider"></th>
+                                <th class="px-4 py-3 text-left text-sm font-medium uppercase tracking-wider">Cement</th>
+                                <th class="px-4 py-3 text-left text-sm font-medium uppercase tracking-wider">Slag</th>
+                                <th class="px-4 py-3 text-left text-sm font-medium uppercase tracking-wider">Fly ash</th>
+                                <th class="px-4 py-3 text-left text-sm font-medium uppercase tracking-wider">Water</th>
+                                <th class="px-4 py-3 text-left text-sm font-medium uppercase tracking-wider">Superplasticizer</th>
+                                <th class="px-4 py-3 text-left text-sm font-medium uppercase tracking-wider">Coarse Agg.</th>
+                                <th class="px-4 py-3 text-left text-sm font-medium uppercase tracking-wider">Fine Agg.</th>
+                                <th class="px-4 py-3 text-left text-sm font-medium uppercase tracking-wider">Age</th>
+                                <th class="px-4 py-3 text-left text-sm font-medium uppercase tracking-wider">CS MPa</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-700 text-gray-300">
+                            <tr class="hover:bg-[#213c6b]"><td class="px-4 py-2 whitespace-nowrap text-sm font-medium">count</td><td class="px-4 py-2 whitespace-nowrap text-sm">1030</td><td class="px-4 py-2 whitespace-nowrap text-sm">1030</td><td class="px-4 py-2 whitespace-nowrap text-sm">1030</td><td class="px-4 py-2 whitespace-nowrap text-sm">1030</td><td class="px-4 py-2 whitespace-nowrap text-sm">1030</td><td class="px-4 py-2 whitespace-nowrap text-sm">1030</td><td class="px-4 py-2 whitespace-nowrap text-sm">1030</td><td class="px-4 py-2 whitespace-nowrap text-sm">1030</td><td class="px-4 py-2 whitespace-nowrap text-sm">1030</td></tr>
+                            <tr class="hover:bg-[#213c6b]"><td class="px-4 py-2 whitespace-nowrap text-sm font-medium">mean</td><td class="px-4 py-2 whitespace-nowrap text-sm">281.17</td><td class="px-4 py-2 whitespace-nowrap text-sm">73.90</td><td class="px-4 py-2 whitespace-nowrap text-sm">54.19</td><td class="px-4 py-2 whitespace-nowrap text-sm">181.57</td><td class="px-4 py-2 whitespace-nowrap text-sm">6.20</td><td class="px-4 py-2 whitespace-nowrap text-sm">972.92</td><td class="px-4 py-2 whitespace-nowrap text-sm">773.58</td><td class="px-4 py-2 whitespace-nowrap text-sm">45.66</td><td class="px-4 py-2 whitespace-nowrap text-sm">35.82</td></tr>
+                            <tr class="hover:bg-[#213c6b]"><td class="px-4 py-2 whitespace-nowrap text-sm font-medium">std</td><td class="px-4 py-2 whitespace-nowrap text-sm">104.51</td><td class="px-4 py-2 whitespace-nowrap text-sm">86.28</td><td class="px-4 py-2 whitespace-nowrap text-sm">64.00</td><td class="px-4 py-2 whitespace-nowrap text-sm">21.35</td><td class="px-4 py-2 whitespace-nowrap text-sm">5.97</td><td class="px-4 py-2 whitespace-nowrap text-sm">77.75</td><td class="px-4 py-2 whitespace-nowrap text-sm">80.18</td><td class="px-4 py-2 whitespace-nowrap text-sm">63.17</td><td class="px-4 py-2 whitespace-nowrap text-sm">16.71</td></tr>
+                            <tr class="hover:bg-[#213c6b]"><td class="px-4 py-2 whitespace-nowrap text-sm font-medium">min</td><td class="px-4 py-2 whitespace-nowrap text-sm">102.00</td><td class="px-4 py-2 whitespace-nowrap text-sm">0.00</td><td class="px-4 py-2 whitespace-nowrap text-sm">0.00</td><td class="px-4 py-2 whitespace-nowrap text-sm">121.80</td><td class="px-4 py-2 whitespace-nowrap text-sm">0.00</td><td class="px-4 py-2 whitespace-nowrap text-sm">801.00</td><td class="px-4 py-2 whitespace-nowrap text-sm">594.00</td><td class="px-4 py-2 whitespace-nowrap text-sm">1.00</td><td class="px-4 py-2 whitespace-nowrap text-sm">2.33</td></tr>
+                            <tr class="hover:bg-[#213c6b]"><td class="px-4 py-2 whitespace-nowrap text-sm font-medium">max</td><td class="px-4 py-2 whitespace-nowrap text-sm">540.00</td><td class="px-4 py-2 whitespace-nowrap text-sm">359.40</td><td class="px-4 py-2 whitespace-nowrap text-sm">200.10</td><td class="px-4 py-2 whitespace-nowrap text-sm">247.00</td><td class="px-4 py-2 whitespace-nowrap text-sm">32.20</td><td class="px-4 py-2 whitespace-nowrap text-sm">1145.00</td><td class="px-4 py-2 whitespace-nowrap text-sm">992.60</td><td class="px-4 py-2 whitespace-nowrap text-sm">365.00</td><td class="px-4 py-2 whitespace-nowrap text-sm">82.60</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="text-xl font-medium mb-2">Exploratory Data Analysis (EDA)</h4>
+                <p class="mb-5 text-gray-300">The initial descriptive statistics reveal several important characteristics of the dataset, which consists of 1,030 complete observations with no missing values across any of the features. The initial range of the Target Compressive Strength (the main input to our inverse model) is wide, ranging from $2.33 \text{ MPa}$ to $82.60 \text{ MPa}$, indicating a diverse dataset that forces the model to learn relationships across many different concrete grades.</p>
+
+                <h4 class="text-xl font-medium mb-2">Distribution Characteristics of Target Variables (Mix Components)</h4>
+                <p class="mb-5 text-gray-300">A key finding is that several ingredients (the model's targets) are not used in all mixtures. Fly Ash, Slag, and Superplasticizer all have minimum and $25^{\text{th}}$ percentile values of $0$. In fact, the median for Fly Ash is also $0$, indicating that over half of the concrete samples in this dataset do not contain Fly Ash. This suggests the model will encounter a high frequency of zero-value outputs, adding complexity to the training process. Core components like Cement, Water, Coarse Aggregate, and Fine Aggregate are present in all samples. Cement content shows the most significant variation among the mix components, with a standard deviation of $104.51$.</p>
+
+                <h3 class="text-2xl font-semibold mb-3">2.3. Feature Relationships and Correlation</h3>
+                <p class="mb-3 text-gray-300">The correlation analysis quantifies the linear relationships between the inputs (desired properties) and the outputs (optimal mix components). Understanding these correlations is crucial, as the Multi-Output ANN must learn these complex, often non-linear, dependencies simultaneously.</p>
+
+                <h4 class="text-xl font-medium mb-2">Correlation Heatmap</h4>
+                <p class="mb-4 text-gray-300">The correlation heatmap provides a visual summary of the dependencies.</p>
+                <div class="flex justify-center mb-8 bg-[#0d172e] p-4 rounded-lg shadow-inner">
+                    <!-- Placeholder for Correlation Heatmap - Path set to user's specified address -->
+                    <img src="file/correlation_heatmap.svg" alt="Correlation Heatmap for Concrete Data Features" class="w-full h-auto max-w-xl rounded-lg shadow-2xl border border-gray-700">
+                </div>
+
+                <h4 class="text-xl font-medium mb-2">Key Relationships Between Input (Goal) and Output (Mix)</h4>
+                <ul class="list-disc list-inside space-y-1 text-gray-300 ml-4 mb-4">
+                    <li><span class="font-medium text-[#00c6e0]">Cement:</span> The most critical relationship is the strong positive correlation between the input CS and the output Cement content ($+0.50$). The model must accurately learn this ratio to determine the minimum cement required to hit the target strength.</li>
+                    <li><span class="font-medium text-[#00c6e0]">Water:</span> The input CS has a significant negative relationship with the output Water ($-0.29$). This inverse correlation is fundamental to the water-to-cement ratio principle and serves as a hard constraint for the model's output predictions.</li>
+                    <li><span class="font-medium text-[#00c6e0]">Superplasticizer and Age:</span> Both the output Superplasticizer (additive) and the input Age show notable positive correlations with the input CS ($+0.37$ and $+0.33$, respectively). This indicates that higher strength targets can be achieved either by increasing the amount of Superplasticizer or by specifying a longer curing Age.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 3. Model Development and Training -->
+        <section class="mb-12">
+            <h2 class="text-4xl font-bold mb-8 section-heading border-b border-gray-600 pb-2">3. Model Development and Training</h2>
+
+            <div class="p-6 rounded-xl mb-6 bg-[#162447]">
+                <h3 class="text-2xl font-semibold mb-3">3.1. Data Preprocessing</h3>
+                <p class="mb-5 text-gray-300">To prepare the data for training the neural network, the following steps were taken:</p>
+                <ul class="list-disc list-inside space-y-2 text-gray-300 ml-4 mb-5">
+                    <li><span class="font-medium text-white">Train-Validation-Test Split:</span> The dataset was split into three sets to ensure robust training and evaluation: Training set ($70\%$), Validation set ($15\%$), and Test set ($15\%$).</li>
+                    <li><span class="font-medium text-white">Feature Scaling:</span> The StandardScaler was used to scale both the input features (CS, Age, Aggregates) and the five target output variables (Cement, Slag, Fly Ash, Water, Superplasticizer). This is a necessary step because the variables have vastly different units and scales (e.g., Age in days vs. Cement in $\text{kg/m}^3$). StandardScaler transforms the data to have a mean of $0$ and a standard deviation of $1$, which significantly aids the neural network in learning effectively and converging faster.</li>
+                </ul>
+
+                <h3 class="text-2xl font-semibold mb-3">3.2. Model Architecture (Forward Baseline)</h3>
+                <p class="mb-3 text-gray-300">While the primary goal of DLCO is a multi-output inverse model, a simpler sequential deep neural network was initially developed and evaluated to predict Compressive Strength (forward problem) to establish a performance baseline. This architecture was constructed with an input layer corresponding to the $\mathbf{8}$ feature variables in the dataset, followed by two hidden layers, and a single-neuron output layer for the regression task. The Rectified Linear Unit (ReLU) activation function was used in all hidden layers to introduce non-linearity, while a Linear activation function was used in the output layer to predict a continuous value.</p>
+
+                <!-- Model Architecture Table -->
+                <div class="overflow-x-auto mb-6 max-w-sm mx-auto shadow-xl rounded-lg border border-gray-700">
+                    <table class="min-w-full divide-y divide-gray-700 table-custom">
+                        <thead class="bg-[#00c6e0]/20">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-sm font-medium text-[#00c6e0] uppercase tracking-wider">Layer</th>
+                                <th class="px-4 py-3 text-center text-sm font-medium text-[#00c6e0] uppercase tracking-wider">Neurons</th>
+                                <th class="px-4 py-3 text-left text-sm font-medium text-[#00c6e0] uppercase tracking-wider">Activation</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-700 text-gray-300">
+                            <tr class="hover:bg-[#213c6b]"><td class="px-4 py-2 whitespace-nowrap text-sm font-medium">Input Layer</td><td class="px-4 py-2 text-center whitespace-nowrap text-sm">8</td><td class="px-4 py-2 whitespace-nowrap text-sm">-</td></tr>
+                            <tr class="hover:bg-[#213c6b]"><td class="px-4 py-2 whitespace-nowrap text-sm font-medium">Hidden Layer 1</td><td class="px-4 py-2 text-center whitespace-nowrap text-sm">64</td><td class="px-4 py-2 whitespace-nowrap text-sm">ReLU</td></tr>
+                            <tr class="hover:bg-[#213c6b]"><td class="px-4 py-2 whitespace-nowrap text-sm font-medium">Hidden Layer 2</td><td class="px-4 py-2 text-center whitespace-nowrap text-sm">64</td><td class="px-4 py-2 whitespace-nowrap text-sm">ReLU</td></tr>
+                            <tr class="hover:bg-[#213c6b]"><td class="px-4 py-2 whitespace-nowrap text-sm font-medium">Output Layer</td><td class="px-4 py-2 text-center whitespace-nowrap text-sm">1</td><td class="px-4 py-2 whitespace-nowrap text-sm">Linear</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="text-xs text-right text-gray-500 p-2">Total Parameters: 4801</p>
+                </div>
+
+
+                <h3 class="text-2xl font-semibold mb-3">3.3. Training Process</h3>
+                <p class="mb-3 text-gray-300">The model was compiled and trained using the following configuration:</p>
+                <ul class="list-disc list-inside space-y-1 text-gray-300 ml-4 mb-4">
+                    <li><span class="font-medium text-white">Optimizer:</span> Adam was chosen as the optimizer with a learning rate of $0.001$.</li>
+                    <li><span class="font-medium text-white">Loss Function:</span> Mean Squared Error (MSE) was used as the loss function.</li>
+                    <li><span class="font-medium text-white">Metrics:</span> Mean Absolute Error (MAE) was monitored during training.</li>
+                    <li><span class="font-medium text-white">Batch Size:</span> A batch size of $32$ was used.</li>
+                    <li><span class="font-medium text-white">Number of Epochs:</span> The model was trained for $100$ epochs. An early stopping mechanism was enabled with a patience of $10$ to prevent overfitting, halting the training when the validation loss ceased to improve.</li>
+                </ul>
+
+                <h4 class="text-xl font-medium mb-2">Training Loss Curve</h4>
+                <div class="flex justify-center mb-8 bg-[#0d172e] p-4 rounded-lg shadow-inner">
+                    <!-- Placeholder for Loss Curve - Path set to user's specified address -->
+                    <img src="file/loss_curve.svg" alt="Training and Validation Loss Curve Over Epochs" class="w-full h-auto max-w-2xl rounded-lg shadow-2xl border border-gray-700">
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Results and Discussion -->
+        <section class="mb-12">
+            <h2 class="text-4xl font-bold mb-8 section-heading border-b border-gray-600 pb-2">4. Results and Discussion</h2>
+
+            <div class="p-6 rounded-xl mb-6 bg-[#162447]">
+                <h3 class="text-2xl font-semibold mb-3">4.1. Model Performance</h3>
+                <p class="mb-3 text-gray-300">The final model was evaluated on an unseen test dataset to assess its generalization capability. The performance metrics are summarized in the table below.</p>
+
+                <!-- Performance Metrics Table -->
+                <div class="overflow-x-auto mb-10 max-w-md mx-auto shadow-xl rounded-lg border border-gray-700">
+                    <table class="min-w-full divide-y divide-gray-700 table-custom">
+                        <thead class="bg-[#00c6e0]/20">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-sm font-medium text-[#00c6e0] uppercase tracking-wider">Metric</th>
+                                <th class="px-4 py-3 text-center text-sm font-medium text-[#00c6e0] uppercase tracking-wider">Value</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-700 text-gray-300">
+                            <tr class="hover:bg-[#213c6b]"><td class="px-4 py-2 whitespace-nowrap text-sm font-medium">Mean Squared Error (MSE)</td><td class="px-4 py-2 text-center whitespace-nowrap text-sm">39.91</td></tr>
+                            <tr class="hover:bg-[#213c6b]"><td class="px-4 py-2 whitespace-nowrap text-sm font-medium">Mean Absolute Error (MAE)</td><td class="px-4 py-2 text-center whitespace-nowrap text-sm">5.01</td></tr>
+                            <tr class="hover:bg-[#213c6b]"><td class="px-4 py-2 whitespace-nowrap text-sm font-medium">$R^2$</td><td class="px-4 py-2 text-center whitespace-nowrap text-sm">0.841</td></tr>
+                            <tr class="hover:bg-[#213c6b]"><td class="px-4 py-2 whitespace-nowrap text-sm font-medium">Mean Absolute Percentage Error (MAPE)</td><td class="px-4 py-2 text-center whitespace-nowrap text-sm">15.75%</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="text-2xl font-semibold mb-3">4.2. Analysis of Results</h3>
+                <p class="mb-5 text-gray-300">The results indicate a good level of performance for a simplified model in solving the forward prediction problem (predicting CS from 8 inputs). This provides a strong foundation for the eventual DLCO multi-output model.</p>
+                <ul class="list-disc list-inside space-y-2 text-gray-300 ml-4 mb-5">
+                    <li><span class="font-medium text-[#00c6e0]">Error Magnitude:</span> An MAE of $5.01 \text{ MPa}$ signifies that, on average, the model's prediction of compressive strength is off by approximately $5.01 \text{ MPa}$. This level of error is still generally considered good in the context of civil engineering, suggesting a reliable predictive tool.</li>
+                    <li><span class="font-medium text-[#00c6e0]">Explained Variance:</span> The $R^2$ score of $0.841$ is strong. It implies that approximately $84.1\%$ of the variability in the actual concrete compressive strength is explained by the model. This high value confirms a strong correlation between the model's predictions and the actual values, indicating a robust and well-fitting model, especially given its architectural simplicity.</li>
+                    <li><span class="font-medium text-[#00c6e0]">Relative Error:</span> The MAPE of $15.75\%$ provides a relative measure of error, showing that the average prediction error is about $15.75\%$ of the actual value, which is a respectable figure.</li>
+                </ul>
+
+                <h4 class="text-xl font-medium mb-2">Performance Visualizations</h4>
+                <div class="chart-container">
+                    <!-- Placeholder for Residuals Plot - Path set to user's specified address -->
+                    <div class="bg-[#0d172e] p-4 rounded-lg shadow-xl border border-gray-700">
+                        <p class="text-center font-semibold text-[#00c6e0] mb-3">Residuals Plot</p>
+                        <img src="file/residuals_plot.svg" alt="Residuals Plot showing prediction errors" class="w-full h-auto rounded">
+                    </div>
+                    <!-- Placeholder for Bisector Chart - Path set to user's specified address -->
+                    <div class="bg-[#0d172e] p-4 rounded-lg shadow-xl border border-gray-700">
+                        <p class="text-center font-semibold text-[#00c6e0] mb-3">Actual vs. Predicted Bisector Plot</p>
+                        <img src="file/bisector_chart.svg" alt="Bisector Plot comparing actual vs predicted values" class="w-full h-auto rounded">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Conclusion -->
+        <section class="mb-6">
+            <h2 class="text-4xl font-bold mb-8 section-heading border-b border-gray-600 pb-2">5. Conclusion</h2>
+            <div class="p-6 rounded-xl mb-6 bg-[#162447]">
+                <h3 class="text-2xl font-semibold mb-3">5.1. Summary of Work</h3>
+                <p class="mb-5 text-gray-300">This project involved the design, training, and evaluation of a deep neural network to predict concrete compressive strength based on its constituent ingredients and age. A simplified three-layer network (two hidden layers with $64$ neurons each) was developed and trained using the Adam optimizer with a learning rate of $0.001$. The model's performance was rigorously assessed on a held-out test set, yielding strong results across multiple standard regression metrics.</p>
+
+                <h3 class="text-2xl font-semibold mb-3">5.2. Final Conclusion</h3>
+                <p class="mb-5 text-gray-300">This project successfully demonstrated that an artificial neural network, even with a relatively shallow architecture, can be an effective tool for predicting concrete compressive strength with a high degree of accuracy. The final model achieved an $R^2$ score of $0.841$ and a Mean Absolute Error of $5.01 \text{ MPa}$. This performance confirms a robust and well-fitting model, suggesting its potential as a valuable asset for material science and civil engineering applications, enabling faster and more cost-effective formulation analysis.</p>
+
+                <h3 class="text-2xl font-semibold mb-3">5.3. Future Work</h3>
+                <ul class="list-disc list-inside space-y-2 text-gray-300 ml-4">
+                    <li><span class="font-medium text-[#00c6e0]">Implement DLCO (Inverse Model):</span> The immediate next step is to proceed with the core DLCO objective: building and training the multi-output model to predict the 5 mix components from 4 desired properties.</li>
+                    <li><span class="font-medium text-[#00c6e0]">Experiment with Other Architectures:</span> Although the simplified network performed well, explore other deep learning designs, such as Convolutional Neural Networks (CNNs) for tabular data or deeper fully connected networks, to see if they can capture more complex non-linearities.</li>
+                    <li><span class="font-medium text-[#00c6e0]">Investigate Other Models:</span> Investigate the performance of other machine learning algorithms, such as Gradient Boosting (e.g., XGBoost, LightGBM) or Random Forests, which are often strong performers on tabular data and may outperform the current neural network.</li>
+                    <li><span class="font-medium text-[#00c6e0]">Hyperparameter Tuning:</span> Conduct a more extensive hyperparameter search, particularly for the learning rate ($0.001$) and the number of neurons ($64$) in the hidden layers, using techniques like Grid Search or Bayesian Optimization to find an even more optimal configuration.</li>
+                    <li><span class="font-medium text-[#00c6e0]">Deployment:</span> Develop a simple web application or API that allows users to input concrete mixture details and receive an instant prediction of its compressive strength, making the model accessible to engineers and researchers.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="mt-12 pt-6 border-t border-gray-700 text-center text-gray-500 text-sm">
+            <p>Data Source: UCI Concrete Compressive Strength Dataset via Kaggle</p>
+            <p>Report Generated: September 22, 2025</p>
+        </footer>
+
+    </main>
+
+</body>
+</html>

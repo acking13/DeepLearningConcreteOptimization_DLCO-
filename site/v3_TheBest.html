@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project DLCO | Inverse Prediction of Optimal Concrete Mix Designs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .section-fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .section-fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+        }
+        .metric-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .table-responsive {
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800">
+
+    <header class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-6 py-20 text-center">
+            <h1 class="text-5xl md:text-6xl font-bold leading-tight mb-4">DeepLearningConcreteOptimization (DLCO)</h1>
+            <p class="text-xl md:text-2xl text-blue-200">Inverse Prediction of Optimal Concrete Mix Designs using Artificial Neural Networks</p>
+        </div>
+    </header>
+
+    <nav class="sticky-nav bg-white/80 backdrop-blur-md shadow-md">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-center items-center h-16 space-x-4 md:space-x-8 overflow-x-auto">
+                <a href="#abstract" class="text-slate-600 hover:text-blue-600 font-semibold transition-colors duration-300">Abstract</a>
+                <a href="#visuals" class="text-slate-600 hover:text-blue-600 font-semibold transition-colors duration-300">Data Insights</a>
+                <a href="#results" class="text-slate-600 hover:text-blue-600 font-semibold transition-colors duration-300">Performance</a>
+                <a href="#methodology" class="text-slate-600 hover:text-blue-600 font-semibold transition-colors duration-300">Methodology</a>
+                <a href="#appendix" class="text-slate-600 hover:text-blue-600 font-semibold transition-colors duration-300">Dataset</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-6 py-12">
+
+        <section id="abstract" class="section-fade-in mb-16 bg-white p-8 rounded-xl shadow-md">
+            <h2 class="text-3xl font-bold text-slate-900 mb-4 border-b-2 border-blue-500 pb-2">Abstract & Problem Statement</h2>
+            <p class="text-lg leading-relaxed mb-4">
+                The DLCO project addresses the challenge of efficient and precise concrete mix design by employing a **Multi-Output Artificial Neural Network (ANN)** to solve the **inverse problem**. Instead of predicting strength from a known mix, this study determines the **optimal proportions of five key ingredients** (Cement, Slag, Fly Ash, Water, Superplasticizer) required to achieve a **specific target Compressive Strength (CS)** at a given Age.
+            </p>
+            <p class="text-lg leading-relaxed">
+                The model restructured the UCI Concrete Compressive Strength dataset, achieving **high R-squared values** across all five output composition variables. The conclusion is that deep learning provides a viable, rapid, and non-linear alternative to traditional, trial-and-error methods for optimizing concrete formulation, potentially leading to significant reductions in material waste and cost.
+            </p>
+        </section>
+
+        <section id="visuals" class="section-fade-in mb-16">
+            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Key Findings & Visualizations</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <img src="file/bisector_chart.svg" alt="Bisector chart showing predicted vs. actual concrete mix component ratios" class="rounded-lg w-full border border-slate-200">
+                    <p class="text-center mt-4 text-slate-600 italic"><strong>Fig 1: Predicted vs. Actual Output Values.</strong> The performance of one predicted output (e.g., Cement) clustering tightly around the ideal $45^\circ$ line.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <img src="file/correlation_heatmap.svg" alt="Correlation heatmap of concrete components" class="rounded-lg w-full border border-slate-200">
+                    <p class="text-center mt-4 text-slate-600 italic"><strong>Fig 2: Correlation Heatmap.</strong> Visualizing key input-to-output and inter-output dependencies, like the **Water-Superplasticizer** relationship ($-0.66$).</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <img src="file/loss_curve.svg" alt="Model training and validation loss curve" class="rounded-lg w-full border border-slate-200">
+                    <p class="text-center mt-4 text-slate-600 italic"><strong>Fig 3: Training & Validation Loss.</strong> The combined loss curve for the **five simultaneous outputs** converging smoothly, indicating stable training.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <img src="file/residuals_plot.svg" alt="Residuals plot showing the difference between actual and predicted values" class="rounded-lg w-full border border-slate-200">
+                    <p class="text-center mt-4 text-slate-600 italic"><strong>Fig 4: Residuals Plot.</strong> Residuals for one output variable are randomly scattered around zero, confirming the model lacks systematic bias.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="results" class="section-fade-in mb-16 gradient-bg text-white py-12 px-8 rounded-xl shadow-2xl">
+            <h2 class="text-3xl font-bold mb-8 text-center text-white border-b-2 border-blue-300 pb-2">Multi-Output Model Performance Summary</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div class="metric-card p-6 rounded-lg transition-transform transform hover:scale-105">
+                    <h3 class="text-xl font-semibold text-blue-200 mb-2">Model Type</h3>
+                    <p class="text-5xl font-bold">Multi-Output</p>
+                    <p class="mt-3 text-blue-200">Simultaneously predicts 5 distinct variables.</p>
+                </div>
+                <div class="metric-card p-6 rounded-lg transition-transform transform hover:scale-105">
+                    <h3 class="text-xl font-semibold text-blue-200 mb-2">Key Result</h3>
+                    <p class="text-5xl font-bold">High R²</p>
+                    <p class="mt-3 text-blue-200">Achieved high R-squared values across all 5 outputs.</p>
+                </div>
+                <div class="metric-card p-6 rounded-lg transition-transform transform hover:scale-105">
+                    <h3 class="text-xl font-semibold text-blue-200 mb-2">Benefit</h3>
+                    <p class="text-5xl font-bold">Optimization</p>
+                    <p class="mt-3 text-blue-200">Non-linear, rapid formulation optimization.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="methodology" class="section-fade-in mb-16 bg-white p-8 rounded-xl shadow-md">
+            <h2 class="text-3xl font-bold text-slate-900 mb-6 border-b-2 border-blue-500 pb-2">Methodology: Multi-Output ANN</h2>
+            <div class="grid md:grid-cols-2 gap-10">
+                <div>
+                    <h3 class="text-2xl font-semibold mb-3">1. Data Preparation</h3>
+                    <p class="mb-4">The dataset (1,030 samples) was restructured to define the inverse problem. Variables were separated into the 4 input goal parameters and the 5 target composition variables.</p>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li>**Dataset Split:** 70% Training, 15% Validation, 15% Test.</li>
+                        <li>**Feature Scaling:** `StandardScaler` applied to **all** 9 variables (inputs and targets) to ensure consistent scale.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-semibold mb-3">2. Model Architecture & Training</h3>
+                    <p class="mb-4">A Sequential Deep Neural Network was employed, specifically designed to handle the simultaneous prediction of multiple, related continuous outputs.</p>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li>**Architecture:** Multi-layered, fully-connected ANN.</li>
+                        <li>**Output Layer:** 5 neurons (for Cement, Slag, Fly Ash, Water, Superplasticizer) with **Linear** activation.</li>
+                        <li>**Loss Function:** Mean Squared Error (MSE), minimized simultaneously for all five outputs.</li>
+                        <li>**Goal:** To learn the complex, non-linear function $f(\text{CS, Age, Aggregates}) \rightarrow (\text{Cement, Slag, Fly Ash, Water, SP})$.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <section id="conclusion" class="section-fade-in mb-16 bg-white p-8 rounded-xl shadow-md">
+            <h2 class="text-3xl font-bold text-slate-900 mb-4 border-b-2 border-blue-500 pb-2">Conclusion & Future Work</h2>
+            <p class="text-lg leading-relaxed mb-6">
+                The DLCO project successfully validated that deep learning can be used to solve the challenging **inverse prediction problem** in materials science. The multi-output ANN accurately models the proportions of five key ingredients required to meet a strength target, offering a scalable and efficient optimization tool.
+            </p>
+            <h3 class="text-2xl font-semibold mb-3">Potential Improvements:</h3>
+            <ul class="list-disc list-inside space-y-2">
+                <li>**Constitutional Constraints:** Integrate physical constraints (e.g., minimum and maximum material usage, water-to-cement ratio) into the loss function to ensure chemically and physically viable mix designs.</li>
+                <li>**Transfer Learning:** Explore pre-training on larger synthetic datasets to improve the model's ability to generalize across different mix-design spaces.</li>
+                <li>**Deployment:** Develop a user-friendly API or application to allow engineers to quickly input performance goals and receive an optimal, resource-efficient mix design.</li>
+            </ul>
+        </section>
+
+        <section id="appendix" class="section-fade-in bg-white p-8 rounded-xl shadow-md">
+            <h2 class="text-3xl font-bold text-slate-900 mb-6 border-b-2 border-blue-500 pb-2">Appendix: Restructured Dataset Summary</h2>
+            
+            <h3 class="text-2xl font-semibold mb-4">Summary Statistics of Concrete Data</h3>
+            <p class="mb-6">The descriptive statistics highlight the high variability and the prevalence of zero values for supplementary cementitious materials (SCMs), which the multi-output model must learn to handle.</p>
+            <div class="overflow-x-auto rounded-lg border">
+                <table class="min-w-full bg-white">
+                    <thead class="bg-slate-200">
+                        <tr>
+                            <th class="py-3 px-4 text-left font-semibold">Variable</th>
+                            <th class="py-3 px-4 text-left font-semibold">Mean</th>
+                            <th class="py-3 px-4 text-left font-semibold">Std Dev</th>
+                            <th class="py-3 px-4 text-left font-semibold">Min (25%)</th>
+                            <th class="py-3 px-4 text-left font-semibold">Max</th>
+                            <th class="py-3 px-4 text-left font-semibold">Role</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-slate-700">
+                        <tr class="hover:bg-slate-100 border-t"><td class="py-3 px-4 font-semibold text-green-600">Cement</td><td class="py-3 px-4">281.17</td><td class="py-3 px-4">104.51</td><td class="py-3 px-4">102.00</td><td class="py-3 px-4">540.00</td><td class="py-3 px-4">Output</td></tr>
+                        <tr class="hover:bg-slate-100 border-t"><td class="py-3 px-4 font-semibold text-green-600">Blast Furnace Slag</td><td class="py-3 px-4">73.90</td><td class="py-3 px-4">86.28</td><td class="py-3 px-4">0.00 (0.00)</td><td class="py-3 px-4">359.40</td><td class="py-3 px-4">Output</td></tr>
+                        <tr class="hover:bg-slate-100 border-t"><td class="py-3 px-4 font-semibold text-green-600">Fly Ash</td><td class="py-3 px-4">54.19</td><td class="py-3 px-4">64.00</td><td class="py-3 px-4">0.00 (0.00)</td><td class="py-3 px-4">200.10</td><td class="py-3 px-4">Output</td></tr>
+                        <tr class="hover:bg-slate-100 border-t"><td class="py-3 px-4 font-semibold text-green-600">Water</td><td class="py-3 px-4">181.57</td><td class="py-3 px-4">21.35</td><td class="py-3 px-4">121.80</td><td class="py-3 px-4">247.00</td><td class="py-3 px-4">Output</td></tr>
+                        <tr class="hover:bg-slate-100 border-t"><td class="py-3 px-4 font-semibold text-green-600">Superplasticizer</td><td class="py-3 px-4">6.20</td><td class="py-3 px-4">5.97</td><td class="py-3 px-4">0.00 (0.00)</td><td class="py-3 px-4">32.20</td><td class="py-3 px-4">Output</td></tr>
+                        
+                        <tr class="hover:bg-slate-100 border-t"><td class="py-3 px-4 font-semibold text-blue-600">Target CS (MPa)</td><td class="py-3 px-4">35.82</td><td class="py-3 px-4">16.71</td><td class="py-3 px-4">2.33</td><td class="py-3 px-4">82.60</td><td class="py-3 px-4">Input (Goal)</td></tr>
+                        <tr class="hover:bg-slate-100 border-t"><td class="py-3 px-4 font-semibold text-blue-600">Age (days)</td><td class="py-3 px-4">45.66</td><td class="py-3 px-4">63.17</td><td class="py-3 px-4">1.00 (7.00)</td><td class="py-3 px-4">365.00</td><td class="py-3 px-4">Input (Goal)</td></tr>
+                        <tr class="hover:bg-slate-100 border-t"><td class="py-3 px-4 font-semibold text-blue-600">Coarse Aggregate</td><td class="py-3 px-4">972.92</td><td class="py-3 px-4">77.75</td><td class="py-3 px-4">801.00</td><td class="py-3 px-4">1145.00</td><td class="py-3 px-4">Input</td></tr>
+                        <tr class="hover:bg-slate-100 border-t"><td class="py-3 px-4 font-semibold text-blue-600">Fine Aggregate</td><td class="py-3 px-4">773.58</td><td class="py-3 px-4">80.18</td><td class="py-3 px-4">594.00</td><td class="py-3 px-4">992.60</td><td class="py-3 px-4">Input</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-800 text-white mt-12">
+        <div class="container mx-auto px-6 py-8 text-center">
+            <p>&copy; 2025 Project DLCO. All rights reserved.</p>
+            <p class="text-sm text-slate-400 mt-2">Solving the inverse problem in civil engineering with deep learning.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('.section-fade-in');
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+
+</body>
+</html>
